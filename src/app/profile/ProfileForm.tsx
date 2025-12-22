@@ -80,15 +80,15 @@ export default function ProfileForm({
             <div className={styles.field}>
                 <label>Pupitre</label>
                 <select
-                value={role ?? ""}
-                onChange={(e) => setRole(Number(e.target.value))}
-                >
-                <option value="">— Choisir —</option>
-                {roles.map((r: any) => (
-                    <option key={r.id} value={r.id}>
-                    {r.name}
-                    </option>
-                ))}
+                    value={role ?? ""}
+                    onChange={(e) => setRole(Number(e.target.value))}
+                    >
+                    <option value="">— Choisir —</option>
+                    {roles.map((r) => (
+                        <option key={r.id} value={r.id}>
+                            {r.name}
+                        </option>
+                    ))}
                 </select>
             </div>
 

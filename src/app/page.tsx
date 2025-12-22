@@ -5,9 +5,6 @@ import { cookies } from "next/headers";
 
 
 export default async function Home() {
-  // const supabase = createClient(cookies());
-  // const { data: partitions } = await supabase.from("partitions").select();
-  // console.log(partitions);
 
   return (
     <div className={styles.page}>
@@ -18,7 +15,7 @@ export default async function Home() {
           <p className={styles.description}>
             Gestion des partitions et aide à la préparation des chants pour la Chorale CCFJ.
           </p>
-          {/* <div>{JSON.stringify(partitions, null, 2)}</div> */}
+
         </div>
       </main>
     </div>

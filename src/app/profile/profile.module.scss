@@ -1,0 +1,77 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: #2b2b2b;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.9rem;
+    color: #444;
+  }
+
+  input,
+  select {
+    padding: 0.6rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+
+    &:focus {
+      outline: none;
+      border-color: #6b7cff;
+    }
+  }
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+
+  &:hover {
+    background: #5a6af0;
+  }
+}
+
+.success {
+  color: #1a7f37;
+  font-size: 0.9rem;
+}

@@ -20,12 +20,18 @@ export default async function Header() {
             <nav className={styles.nav}>
             {user ? (
                 <>
+                <Link href="/partitions" className={styles.link}>
+                    Partitions
+                </Link>
+
                 <Link href="/profile" className={styles.link}>
                     Mon profil
                 </Link>
 
                 <form action="/auth/logout" method="post">
-                    <button className={styles.button}>Déconnexion</button>
+                    <button className={styles.button}>
+                        Déconnexion
+                    </button>
                 </form>
                 </>
             ) : (

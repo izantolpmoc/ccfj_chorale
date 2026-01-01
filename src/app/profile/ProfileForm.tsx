@@ -12,13 +12,18 @@ type Profile = {
     role: number | null;
 };
 
+type Role = {
+    id: number;
+    name: string;
+};
+
 export default function ProfileForm({
     profile,
     roles,
     }: {
     profile: Profile;
-    roles: { id: number; name: string }[];
-    }) {
+    roles: Role[];
+}) {
     const supabase = createClient();
 
     const [firstname, setFirstname] = useState(profile.firstname ?? "");
@@ -28,7 +33,7 @@ export default function ProfileForm({
     const [saved, setSaved] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const save = async (e: React.FormEvent) => {
+    const save = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSaved(false);
         setError(null);
@@ -52,53 +57,61 @@ export default function ProfileForm({
 
     return (
         <form onSubmit={save} className={styles.form}>
-            <div className={styles.field}>
-                <label>Prénom</label>
-                <input
-                value={firstname}
-                onChange={(e) => setFirstname(e.target.value)}
-                />
-            </div>
+        <div className={styles.field}>
+            <label>Prénom</label>
+            <input
+            value={firstname}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFirstname(e.target.value)
+            }
+            />
+        </div>
 
-            <div className={styles.field}>
-                <label>Nom</label>
-                <input
-                value={lastname}
-                onChange={(e) => setLastname(e.target.value)}
-                />
-            </div>
+        <div className={styles.field}>
+            <label>Nom</label>
+            <input
+            value={lastname}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setLastname(e.target.value)
+            }
+            />
+        </div>
 
-            <div className={styles.field}>
-                <label>Nom d’utilisateur</label>
-                <input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                />
-            </div>
+        <div className={styles.field}>
+            <label>Nom d’utilisateur</label>
+            <input
+            value={username}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setUsername(e.target.value)
+            }
+            required
+            />
+        </div>
 
-            <div className={styles.field}>
-                <label>Pupitre</label>
-                <select
-                    value={role ?? ""}
-                    onChange={(e) => setRole(Number(e.target.value))}
-                    >
-                    <option value="">— Choisir —</option>
-                    {roles.map((r) => (
-                        <option key={r.id} value={r.id}>
-                            {r.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+        <div className={styles.field}>
+            <label>Pupitre</label>
+            <select
+            value={role ?? ""}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setRole(Number(e.target.value))
+            }
+            >
+            <option value="">— Choisir —</option>
+            {roles.map((r) => (
+                <option key={r.id} value={r.id}>
+                {r.name}
+                </option>
+            ))}
+            </select>
+        </div>
 
-            <div className={styles.actions}>
-                <button type="submit" className={styles.button}>
-                Enregistrer
-                </button>
-                {saved && <span className={styles.success}>Profil mis à jour</span>}
-            </div>
-            </form>
-
+        <div className={styles.actions}>
+            <button type="submit" className={styles.button}>
+            Enregistrer
+            </button>
+            {saved && <span className={styles.success}>Profil mis à jour</span>}
+            {error && <span className={styles.error}>Erreur : {error}</span>}
+        </div>
+        </form>
     );
 }

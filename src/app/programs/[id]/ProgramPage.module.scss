@@ -1,0 +1,55 @@
+.page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.liturgical {
+  color: #666;
+  font-style: italic;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.item {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #2b2b2b;
+  border: 1px solid #e5e5e5;
+}
+
+.type {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  text-decoration: none;
+  color: #1a73e8;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.empty {
+  color: #999;
+  font-style: italic;
+}

@@ -1,3 +1,4 @@
+import styles from "./ProgramPage.module.scss";
 import { createClient } from "@/lib/supabase/server";
 import { ProgramPartitionRow } from "@/types/program-partition-row";
 import { ProgramWithLiturgicalTime } from "@/types/program-with-liturgical-type";
@@ -5,15 +6,15 @@ import { ProgramWithLiturgicalTime } from "@/types/program-with-liturgical-type"
 type ProgramPartitionRowWithUrl = ProgramPartitionRow & {
     signedUrl?: string;
 };
+
 type Props = {
-    params: Promise<{ id: string }>
-}
+    params: Promise<{ id: string }>;
+};
 
 export default async function ProgramPage({ params }: Readonly<Props>) {
     const { id } = await params;
     const supabase = createClient();
 
-    // 1️⃣ Programme
     const { data: program } = await supabase
         .from("programs")
         .select(`
@@ -25,7 +26,6 @@ export default async function ProgramPage({ params }: Readonly<Props>) {
         .single()
         .overrideTypes<ProgramWithLiturgicalTime>();
 
-    // 2️⃣ Chants du programme
     const { data: rows } = await supabase
         .from("program_partitions")
         .select(`
@@ -39,45 +39,54 @@ export default async function ProgramPage({ params }: Readonly<Props>) {
 
     const rowsWithUrls: ProgramPartitionRowWithUrl[] = await Promise.all(
         (rows ?? []).map(async (row) => {
-            if (!row.partitions?.file_path) {
-            return row;
-            }
+        if (!row.partitions?.file_path) return row;
 
-            const { data } = await supabase.storage
+        const { data } = await supabase.storage
             .from("partitions")
-            .createSignedUrl(row.partitions.file_path, 60 * 10); // 10 min
+            .createSignedUrl(row.partitions.file_path, 60 * 10);
 
-            return {
+        return {
             ...row,
             signedUrl: data?.signedUrl,
-            };
+        };
         })
     );
 
     return (
-        <main>
-        <h1>🎼 Programme du {program?.date}</h1>
-        <p>⛪ {program?.liturgical_times?.name}</p>
-
-        <hr />
-
-        {rowsWithUrls?.map((row) => (
-            <div key={row.id}>
-            <h3>{row.chant_types?.name}</h3>
-
-            {row.partitions ? (
-                <a
-                href={row.signedUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                📄 {row.partitions.name}
-                </a>
-            ) : (
-                <em>— Aucun chant —</em>
+        <main className={styles.page}>
+        <header className={styles.header}>
+            <h1>🎼 Programme du {program?.date}</h1>
+            {program?.liturgical_times?.name && (
+            <p className={styles.liturgical}>
+                ⛪ {program.liturgical_times.name}
+            </p>
             )}
+        </header>
+
+        <section className={styles.list}>
+            {rowsWithUrls.map((row) => (
+            <div key={row.id} className={styles.item}>
+                <h3 className={styles.type}>
+                {row.chant_types?.name}
+                </h3>
+
+                {row.partitions ? (
+                <a
+                    href={row.signedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.link}
+                >
+                    📄 {row.partitions.name}
+                </a>
+                ) : (
+                <span className={styles.empty}>
+                    — Aucun chant —
+                </span>
+                )}
             </div>
-        ))}
+            ))}
+        </section>
         </main>
     );
 }

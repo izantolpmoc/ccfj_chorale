@@ -18,27 +18,27 @@ export default async function ProgramsPage() {
 
 
     return (
-        <main>
-        <h1>📋 Programmes</h1>
+        <main className={styles.container}>
+            <h1>📋 Programmes</h1>
 
-        <Link href="/programs/new" className={styles.addButton}>
-        ➕ Nouveau programme
-        </Link>
-
-        <ul className={styles.list}>
-        {programs?.map((p) => (
-            <li key={p.id} className={styles.item}>
-            <Link href={`/programs/${p.id}`}>
-                <span className={styles.date}>📅 {p.date}</span>
-                <span className={styles.liturgical}>
-                {p.liturgical_times
-                                ? `${p.liturgical_times.name} – Année ${p.liturgical_times.year_cycle}`
-                                : "—"}
-                </span>
+            <Link href="/programs/new" className={styles.addButton}>
+            ➕ Nouveau programme
             </Link>
-            </li>
-        ))}
-        </ul>
+
+            <ul className={styles.list}>
+            {programs?.map((p) => (
+                <li key={p.id} className={styles.item}>
+                <Link href={`/programs/${p.id}`}>
+                    <span className={styles.date}>📅 {p.date}</span>
+                    <span className={styles.liturgical}>
+                    {p.liturgical_times
+                                    ? `${p.liturgical_times.name} – Année ${p.liturgical_times.year_cycle}`
+                                    : "—"}
+                    </span>
+                </Link>
+                </li>
+            ))}
+            </ul>
         </main>
     );
 }

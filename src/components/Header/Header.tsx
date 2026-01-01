@@ -15,7 +15,8 @@ export default async function Header() {
         <header className={styles.header}>
         <div className={styles.inner}>
             <Link href="/" className={styles.logo}>
-            🎶 Chorale CCFJ
+                <img src="/logo.webp" width={'50px'} alt="Logo Chorale CCFJ" /> 
+                <span className={styles.siteName}>Chorale CCFJ</span>
             </Link>
 
             <nav className={styles.nav}>

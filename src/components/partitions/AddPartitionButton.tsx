@@ -7,7 +7,7 @@ export default function AddPartitionButton() {
 
     return (
         <button
-        onClick={() => router.push("/partitions/add")}
+        onClick={() => router.push("/partitions/new")}
         style={{
             marginBottom: "1rem",
             padding: "0.5rem 1rem",

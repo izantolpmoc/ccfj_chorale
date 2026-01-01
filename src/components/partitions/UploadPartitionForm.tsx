@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 import type { ChantType } from "@/types/chant-type";
+import styles from "./upload-partition.module.scss";
 
 export default function UploadPartitionForm({
-    chantTypes,
-    }: {
-    chantTypes: ChantType[];
-    }) {
+  chantTypes,
+}: {
+  chantTypes: ChantType[];
+}) {
     const [name, setName] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState<number | "">("");
+    const [success, setSuccess] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
 
     const toggleType = (id: number) => {
@@ -26,6 +29,8 @@ export default function UploadPartitionForm({
         if (!file) return;
 
         setLoading(true);
+        setError(null);
+        setSuccess(null);
 
         const formData = new FormData();
         formData.append("name", name);
@@ -35,64 +40,106 @@ export default function UploadPartitionForm({
             formData.append("page", page.toString());
         }
 
-        await fetch("/api/partitions", {
+        try {
+            const res = await fetch("/api/partitions", {
             method: "POST",
             body: formData,
-        });
+            });
 
-        setLoading(false);
-    };
+            if (!res.ok) {
+            throw new Error("Erreur lors de l’ajout de la partition");
+            }
+
+            // ✅ succès
+            setSuccess("Partition ajoutée avec succès 🎶");
+
+            // 🔄 reset du formulaire
+            setName("");
+            setFile(null);
+            setSelectedTypes([]);
+            setPage("");
+
+            // reset input file (important)
+            (document.getElementById("file-input") as HTMLInputElement).value = "";
+
+        } catch (err) {
+            setError("Une erreur est survenue. Merci de réessayer.");
+        } finally {
+            setLoading(false);
+        }
+        };
+
 
     return (
-        <form onSubmit={submit}>
-        <label>
-            Nom de la partition
+        <form onSubmit={submit} className={styles.form}>
+        <h2 className={styles.title}>➕ Ajouter une partition</h2>
+
+        <div className={styles.field}>
+            <label>Nom de la partition</label>
             <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            placeholder="Ex : Sanctus – Messe de Saint Boniface"
             />
-        </label>
+        </div>
 
-        <label>
-            Fichier PDF
+        <div className={styles.field}>
+            <label>Fichier PDF</label>
             <input
+            id="file-input"
             type="file"
             accept="application/pdf"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             required
             />
-        </label>
+        </div>
 
-        <label>
+        <div className={styles.field}>
+            <label>
             Page dans le carnet
+            <span className={styles.hint}>
+                (sans page, il sera considéré comme n'étant pas dans le carnet)
+            </span>
+            </label>
             <input
-                type="number"
-                min={1}
-                value={page}
-                contextMenu="Si aucune valeur n'est renseignée, le chant sera indiqué comme n'étant pas dans le carnet."
-                onChange={(e) => setPage(e.target.value === "" ? "" : Number(e.target.value))}
-                placeholder="ex : 42"
+            type="number"
+            min={1}
+            value={page}
+            onChange={(e) =>
+                setPage(e.target.value === "" ? "" : Number(e.target.value))
+            }
+            placeholder="ex : 42"
             />
-        </label>
+        </div>
 
-
-        <fieldset>
+        <fieldset className={styles.types}>
             <legend>Type de chant</legend>
+
+            <div className={styles.typeGrid}>
             {chantTypes.map((t) => (
-            <label key={t.id}>
+                <label
+                key={t.id}
+                className={`${styles.type} ${
+                    selectedTypes.includes(t.id) ? styles.active : ""
+                }`}
+                >
                 <input
-                type="checkbox"
-                checked={selectedTypes.includes(t.id)}
-                onChange={() => toggleType(t.id)}
+                    type="checkbox"
+                    checked={selectedTypes.includes(t.id)}
+                    onChange={() => toggleType(t.id)}
                 />
                 {t.name}
-            </label>
+                </label>
             ))}
+            </div>
         </fieldset>
 
-        <button disabled={loading}>
-            {loading ? "Envoi..." : "Ajouter"}
+        {success && <p className={styles.success}>{success}</p>}
+        {error && <p className={styles.error}>{error}</p>}
+
+        <button disabled={loading} className={styles.submit}>
+            {loading ? "Envoi…" : "Ajouter la partition"}
         </button>
         </form>
     );

@@ -2,37 +2,37 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-    const supabase = createClient(cookies());
-
-    function sanitizeFilename(filename: string) {
+function sanitizeFilename(filename: string) {
     return filename
         .normalize("NFD")                 // sépare accents
-        .replace(/[\u0300-\u036f]/g, "")  // enlève accents
-        .replace(/[^a-zA-Z0-9.-]/g, "-")  // remplace caractères spéciaux
-        .replace(/-+/g, "-")              // évite ----
+        .replaceAll(/[\u0300-\u036f]/g, "")  // enlève accents
+        .replaceAll(/[^a-zA-Z0-9.-]/g, "-")  // remplace caractères spéciaux
+        .replaceAll(/-+/g, "-")              // évite ----
         .toLowerCase();
     };
 
-    // 1️⃣ utilisateur connecté
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+export async function POST(req: Request) {
+    const supabase = createClient(cookies());
 
+   
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 2️⃣ form data
     const formData = await req.formData();
     const file = formData.get("file") as File;
     const name = formData.get("name") as string;
 
+    const pageRaw = formData.get("page");
+    const page =
+        pageRaw && !isNaN(Number(pageRaw)) ? Number(pageRaw) : null;
+
+        
     if (!file) {
         return NextResponse.json({ error: "No file" }, { status: 400 });
     }
 
-    // 3️⃣ upload Storage
     const safeName = sanitizeFilename(file.name);
     const filePath = `${Date.now()}-${safeName}`;
 
@@ -44,15 +44,38 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: uploadError.message }, { status: 500 });
     }
 
-    // 4️⃣ insert DB
-    const { error: dbError } = await supabase.from("partitions").insert({
+    const { data: partition, error: dbError } = await supabase
+        .from("partitions")
+        .insert({
         name,
         file_path: filePath,
         added_by: user.id,
-    });
+        page,
+        })
+        .select("id")
+        .single();
 
-    if (dbError) {
-        return NextResponse.json({ error: dbError.message }, { status: 500 });
+    if (dbError || !partition) {
+        return NextResponse.json({ error: dbError?.message }, { status: 500 });
+    }
+
+    const typesRaw = formData.get("types");
+    const types: number[] = typesRaw ? JSON.parse(typesRaw.toString()) : [];
+
+
+    if (types.length) {
+        const rows = types.map((typeId) => ({
+        partition_id: partition.id,
+        chant_type_id: typeId,
+        }));
+
+        const { error: typesError } = await supabase
+        .from("partition_types")
+        .insert(rows);
+
+        if (typesError) {
+        return NextResponse.json({ error: typesError.message }, { status: 500 });
+        }
     }
 
     return NextResponse.json({ success: true });

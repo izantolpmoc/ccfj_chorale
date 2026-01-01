@@ -1,18 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
 import { ProgramPartitionRow } from "@/types/program-partition-row";
 import { ProgramWithLiturgicalTime } from "@/types/program-with-liturgical-type";
-import { cookies } from "next/headers";
 
 type ProgramPartitionRowWithUrl = ProgramPartitionRow & {
     signedUrl?: string;
 };
+type Props = {
+    params: Promise<{ id: string }>
+}
 
-export default async function ProgramPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-    const supabase = createClient(cookies());
+export default async function ProgramPage({ params }: Readonly<Props>) {
+    const { id } = await params;
+    const supabase = createClient();
 
     // 1️⃣ Programme
     const { data: program } = await supabase
@@ -22,7 +21,7 @@ export default async function ProgramPage({
         date,
         liturgical_times ( name )
         `)
-        .eq("id", params.id)
+        .eq("id", id)
         .single()
         .overrideTypes<ProgramWithLiturgicalTime>();
 
@@ -34,7 +33,7 @@ export default async function ProgramPage({
         chant_types ( id, name ),
         partitions ( id, name, file_path )
         `)
-        .eq("program_id", params.id)
+        .eq("program_id", id)
         .order("chant_type_id")
         .overrideTypes<ProgramPartitionRow[]>();
 

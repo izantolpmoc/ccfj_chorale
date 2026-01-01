@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
     // 1️⃣ Client user (RLS actif)
-    const supabaseUser = createServerClient(cookies());
+    const supabaseUser = createServerClient();
 
     const {
         data: { user },

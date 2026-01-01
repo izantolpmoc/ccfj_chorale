@@ -1,10 +1,9 @@
 import ProgramForm from "@/components/programs/ProgramForm";
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 
 
 export default async function NewProgramPage() {
-    const supabase = createClient(cookies());
+    const supabase = createClient();
 
     const {
         data: { user },

@@ -1,10 +1,9 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 
 export async function login(formData: FormData) {
-    const supabase = createClient(cookies());
+    const supabase = createClient();
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;

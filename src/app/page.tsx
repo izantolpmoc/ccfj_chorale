@@ -1,7 +1,4 @@
-import Image from "next/image";
 import styles from "./page.module.css";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 
 
 export default async function Home() {

@@ -99,7 +99,7 @@ export default function UploadPartitionForm({
             <label>
             Page dans le carnet
             <span className={styles.hint}>
-                (sans page, il sera considéré comme n'étant pas dans le carnet)
+                ( Si aucune valeur n&apos;est renseignée, le chant sera indiqué comme n&apos;étant pas dans le carnet.)
             </span>
             </label>
             <input

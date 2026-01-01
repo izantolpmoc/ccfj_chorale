@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import ProfileForm from "./ProfileForm";
 import styles from "./profile.module.css";
@@ -10,7 +9,7 @@ type Role = {
 };
 
 export default async function ProfilePage() {
-    const supabase = createClient(cookies());
+    const supabase = createClient();
 
     const {
         data: { user },

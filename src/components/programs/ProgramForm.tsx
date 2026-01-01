@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { ChantType } from "@/types/chant-type";
 import type { LiturgicalTime } from "@/types/liturgical-time";
 import { PartitionSelect } from "@/types/partition-select";
+import styles from "./ProgramForm.module.scss";
 
 type Props = {
   chantTypes: ChantType[];
@@ -70,97 +71,99 @@ liturgicalTimes,
     };
 
     return (
-        <form onSubmit={submit}>
-        <h1>Nouveau programme</h1>
+        <form onSubmit={submit} className={styles.form}>
+            <h1>Nouveau programme</h1>
 
-        <label>
-            Date
-            <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            />
-        </label>
-
-        <label>
-            Temps liturgique
-            <select
-            value={liturgicalId}
-            onChange={(e) => setLiturgicalId(Number(e.target.value))}
-            >
-            <option value="">—</option>
-            {liturgicalTimes.map((l) => (
-                <option key={l.id} value={l.id}>
-                {l.name}, Année {l.year_cycle}
-                </option>
-            ))}
-            </select>
-        </label>
-
-        <hr />
-
-        {chantTypes.map((ct) => {
-            const query = queries[ct.id] ?? "";
-            const filtered = getFilteredPartitions(ct.id, query);
-
-            return (
-                <div key={ct.id} style={{ marginBottom: "1.5rem" }}>
-                <strong>{ct.name}</strong>
-
+            <div className={styles.section}>
+                <label className={styles.label}>Date</label>
                 <input
-                    type="text"
-                    placeholder="Rechercher un chant…"
-                    value={query}
-                    onChange={(e) =>
-                    setQueries({ ...queries, [ct.id]: e.target.value })
-                    }
-                    style={{ display: "block", width: "100%", margin: "0.5rem 0" }}
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                className={styles.input}
                 />
+            </div>
 
-                {query && (
-                    <ul style={{ border: "1px solid #ccc", padding: "0.5rem" }}>
-                    {filtered.slice(0, 6).map((p) => {
-                        const isPriority = p.partition_types?.some(
-                        (pt) => pt.chant_type_id === ct.id
-                        );
+            <div className={styles.section}>
+                <label className={styles.label}>Temps liturgique</label>
+                <select
+                value={liturgicalId}
+                onChange={(e) => setLiturgicalId(Number(e.target.value))}
+                className={styles.select}
+                >
+                <option value="">—</option>
+                {liturgicalTimes.map((l) => (
+                    <option key={l.id} value={l.id}>
+                    {l.name}, Année {l.year_cycle}
+                    </option>
+                ))}
+                </select>
+            </div>
 
-                        return (
-                        <li
-                            key={p.id}
-                            style={{
-                            cursor: "pointer",
-                            fontWeight: isPriority ? "bold" : "normal",
-                            }}
-                            onClick={() => {
-                            setSelected({ ...selected, [ct.id]: p.id });
-                            setQueries({ ...queries, [ct.id]: p.name });
-                            }}
-                        >
-                            {p.name}
-                            {isPriority && " ⭐"}
-                        </li>
-                        );
-                    })}
-                    </ul>
-                )}
+            <hr className={styles.hr} />
 
-                {selected[ct.id] && (
-                    <p>
-                    ✔️ Sélectionné :{" "}
-                    {
-                        partitions.find((p) => p.id === selected[ct.id])?.name
-                    }
-                    </p>
-                )}
-                </div>
-            );
+            {chantTypes.map((ct) => {
+                const query = queries[ct.id] ?? "";
+                const filtered = getFilteredPartitions(ct.id, query);
+
+                return (
+                    <div key={ct.id} className={styles.chantCard}>
+                    <div className={styles.chantTitle}>{ct.name}</div>
+
+                    <input
+                        type="text"
+                        placeholder="Rechercher un chant…"
+                        value={query}
+                        onChange={(e) =>
+                        setQueries({ ...queries, [ct.id]: e.target.value })
+                        }
+                        className={styles.searchInput}
+                    />
+
+                    {query && (
+                        <div className={styles.results}>
+                        {filtered.slice(0, 6).map((p) => {
+                            const isPriority = p.partition_types?.some(
+                            (pt) => pt.chant_type_id === ct.id
+                            );
+
+                            return (
+                            <div
+                                key={p.id}
+                                className={`${styles.resultItem} ${
+                                isPriority ? styles.priority : ""
+                                }`}
+                                onClick={() => {
+                                setSelected({ ...selected, [ct.id]: p.id });
+                                setQueries({ ...queries, [ct.id]: p.name });
+                                }}
+                            >
+                                {p.name} {isPriority && "⭐"}
+                            </div>
+                            );
+                        })}
+                        </div>
+                    )}
+
+                    {selected[ct.id] && (
+                        <div className={styles.selected}>
+                        ✔️{" "}
+                        {partitions.find((p) => p.id === selected[ct.id])?.name}
+                        </div>
+                    )}
+                    </div>
+                );
             })}
 
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className={styles.error}>{error}</p>}
 
-        <button type="submit">Créer le programme</button>
+            <button type="submit" className={styles.submit}>
+                Créer le programme
+            </button>
+
         </form>
+
     );
 }

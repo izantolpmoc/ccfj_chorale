@@ -8,5 +8,6 @@ export type ProgramPartitionRow = {
         id: number;
         name: string;
         file_path: string | null;
+        page: number | null;
     } | null;
 };

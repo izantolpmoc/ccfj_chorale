@@ -31,7 +31,7 @@ export default async function ProgramPage({ params }: Readonly<Props>) {
         .select(`
         id,
         chant_types ( id, name ),
-        partitions ( id, name, file_path )
+        partitions ( id, name, file_path, page )
         `)
         .eq("program_id", id)
         .order("chant_type_id")
@@ -77,7 +77,7 @@ export default async function ProgramPage({ params }: Readonly<Props>) {
                     rel="noopener noreferrer"
                     className={styles.link}
                 >
-                    📄 {row.partitions.name}
+                    📄 {row.partitions.name} {row.partitions.page? `(P.${row.partitions.page})` : null}
                 </a>
                 ) : (
                 <span className={styles.empty}>

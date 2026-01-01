@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import PartitionsList from "@/components/partitions/PartitionsList";
+import AddPartitionButton from "@/components/partitions/AddPartitionButton";
 
 export default async function PartitionsPage() {
     const supabase = createClient();

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./partitions.module.scss";
+import AddPartitionButton from "./AddPartitionButton";
 
 type Partition = {
     id: number;
@@ -24,13 +25,17 @@ export default function PartitionsList({
         <main className={styles.container}>
         <h1 className={styles.title}>🎼 Partitions</h1>
 
-        <input
-            type="search"
-            placeholder="Rechercher un chant…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className={styles.search}
-        />
+        
+        <div>
+            <input
+                type="search"
+                placeholder="Rechercher un chant…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className={styles.search}
+            />
+            <AddPartitionButton />
+        </div>
 
         <ul className={styles.list}>
             {filtered.map((p) => (

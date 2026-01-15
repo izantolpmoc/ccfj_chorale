@@ -99,7 +99,7 @@ export default function UploadPartitionForm({
         </div>
 
         <div className={styles.field}>
-            <label>URL de l'audio (optionnel)</label>
+            <label>URL de l&apos;audio (optionnel)</label>
             <input
             value={audio}
             onChange={(e) => setAudio(e.target.value)}

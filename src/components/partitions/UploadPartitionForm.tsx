@@ -11,6 +11,7 @@ export default function UploadPartitionForm({
 }) {
     const [name, setName] = useState("");
     const [file, setFile] = useState<File | null>(null);
+    const [audio, setAudio] = useState("");
     const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState<number | "">("");
@@ -35,6 +36,7 @@ export default function UploadPartitionForm({
         const formData = new FormData();
         formData.append("name", name);
         formData.append("file", file);
+        formData.append("audio_link", audio);
         formData.append("types", JSON.stringify(selectedTypes));
         if (page !== "") {
             formData.append("page", page.toString());
@@ -58,6 +60,7 @@ export default function UploadPartitionForm({
             setFile(null);
             setSelectedTypes([]);
             setPage("");
+            setAudio("");
 
             // reset input file (important)
             (document.getElementById("file-input") as HTMLInputElement).value = "";
@@ -92,6 +95,15 @@ export default function UploadPartitionForm({
             accept="application/pdf"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             required
+            />
+        </div>
+
+        <div className={styles.field}>
+            <label>URL de l'audio (optionnel)</label>
+            <input
+            value={audio}
+            onChange={(e) => setAudio(e.target.value)}
+            placeholder="https://www.youtube.com/watch?v="
             />
         </div>
 

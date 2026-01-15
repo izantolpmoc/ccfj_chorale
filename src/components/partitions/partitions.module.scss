@@ -72,6 +72,23 @@
     }
   }
 
+  .audio {
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.30rem 0.70rem;
+    border-radius: 8px;
+    background: #003d99;
+    color: #ffffff;
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #e2e2e2;
+      color: #003d99;
+    }
+  }
+
   .edit {
     text-decoration: none;
     font-size: 0.9rem;

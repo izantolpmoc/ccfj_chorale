@@ -10,6 +10,7 @@ type Partition = {
     name: string;
     signedUrl: string | null;
     added_by: string;
+    audio_link: string | null;
 };
 
 export default function PartitionsList({
@@ -84,6 +85,17 @@ export default function PartitionsList({
                             <span className={styles.disabled}>Lien indisponible</span>
                             )}
 
+                            {p.audio_link && (
+                                    <a
+                                        href={p.audio_link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles.audio}
+                                    >
+                                        🎧 Écouter
+                                    </a>
+                            )}
+                            
                             {canEdit && (
                             <button
                             className={styles.edit}

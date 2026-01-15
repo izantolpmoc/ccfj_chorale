@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const file = formData.get("file") as File;
     const name = formData.get("name") as string;
+    const audioLink = formData.get("audio_link") as string;
 
     const pageRaw = formData.get("page");
     const page =
@@ -50,6 +51,7 @@ export async function POST(req: Request) {
         file_path: filePath,
         added_by: user.id,
         page,
+        audio_link: audioLink || null,
         })
         .select("id")
         .single();

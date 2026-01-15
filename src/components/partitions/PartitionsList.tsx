@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./partitions.module.scss";
 import AddPartitionButton from "./AddPartitionButton";
 import { createClient } from "@/lib/supabase/client";
+import EditPartitionForm from "./EditPartitionForm";
 
 type Partition = {
     id: number;
@@ -11,6 +12,8 @@ type Partition = {
     signedUrl: string | null;
     added_by: string;
     audio_link: string | null;
+    page: number | null;
+    chant_types: number[];
 };
 
 export default function PartitionsList({
@@ -22,6 +25,8 @@ export default function PartitionsList({
     const [query, setQuery] = useState("");
     const [userId, setUserId] = useState<string | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [editing, setEditing] = useState<Partition | null>(null);
+    const [editingId, setEditingId] = useState<number | null>(null);
 
     const filtered = partitions.filter((p) =>
         p.name.toLowerCase().includes(query.toLowerCase())
@@ -95,17 +100,23 @@ export default function PartitionsList({
                                         🎧 Écouter
                                     </a>
                             )}
-                            
+
                             {canEdit && (
                             <button
                             className={styles.edit}
-                            onClick={() => {
-                                window.alert("Fonctionnalité de modification à venir !");
-                            }}
+                            onClick={() => {setEditingId(editingId === p.id ? null : p.id);}}
                             >
                             ✏️ Modifier
                             </button>)}
                         </div>
+
+                        {editingId === p.id && (
+                                <EditPartitionForm
+                                partition={p}
+                                onClose={() => setEditingId(null)}
+                                onSuccess={() => globalThis.location.reload()}
+                                />
+                        )}
                     </li>
                 )})}
         </ul>

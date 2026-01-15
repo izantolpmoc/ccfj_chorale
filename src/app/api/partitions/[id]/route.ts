@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function PATCH(
-    req: Request,
-    { params }: { params: { id: string } }
+  req: NextRequest, 
+  context: { params: Promise<{ id: string }> } // params est une Promise
 ) {
+    const { id } = await context.params;
     const supabase = createClient();
     const body = await req.json();
 
@@ -15,7 +16,7 @@ export async function PATCH(
         page: body.page,
         audio_link: body.audio_link,
         })
-        .eq("id", params.id);
+        .eq("id", id);
 
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 403 });

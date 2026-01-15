@@ -53,20 +53,43 @@
   font-size: 1rem;
 }
 
-.link {
-  text-decoration: none;
-  font-size: 0.9rem;
-  padding: 0.45rem 0.75rem;
-  border-radius: 8px;
-  background: #f0f0f0;
-  color: #000;
+.buttonsContainer {
+  display: flex;
+  gap: 0.5rem;
 
-  transition: background 0.15s ease;
+  .link {
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #000;
 
-  &:hover {
-    background: #e2e2e2;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #e2e2e2;
+    }
+  }
+
+  .edit {
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.30rem 0.70rem;
+    border-radius: 8px;
+    background: #4b3500;
+    color: #ffffff;
+    cursor: pointer;
+
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #e2e2e2;
+      color: #4b3500;
+    }
   }
 }
+
 
 .disabled {
   font-size: 0.85rem;

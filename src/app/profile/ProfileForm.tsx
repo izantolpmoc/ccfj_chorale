@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 import styles from "./profile.module.css";
 
@@ -33,7 +33,7 @@ export default function ProfileForm({
     const [saved, setSaved] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const save = async (e: React.FormEvent<HTMLFormElement>) => {
+    const save = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSaved(false);
         setError(null);
@@ -61,7 +61,7 @@ export default function ProfileForm({
             <label>Prénom</label>
             <input
             value={firstname}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setFirstname(e.target.value)
             }
             />
@@ -71,7 +71,7 @@ export default function ProfileForm({
             <label>Nom</label>
             <input
             value={lastname}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setLastname(e.target.value)
             }
             />
@@ -81,7 +81,7 @@ export default function ProfileForm({
             <label>Nom d’utilisateur</label>
             <input
             value={username}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setUsername(e.target.value)
             }
             required
@@ -92,7 +92,7 @@ export default function ProfileForm({
             <label>Pupitre</label>
             <select
             value={role ?? ""}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                 setRole(Number(e.target.value))
             }
             >

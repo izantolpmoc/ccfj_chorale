@@ -10,6 +10,7 @@ type Profile = {
     lastname: string | null;
     username: string | null;
     role: number | null;
+    is_admin: boolean;
 };
 
 type Role = {

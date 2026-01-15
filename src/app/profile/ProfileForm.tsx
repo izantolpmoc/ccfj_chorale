@@ -79,7 +79,7 @@ export default function ProfileForm({
         </div>
 
         <div className={styles.field}>
-            <label>Nom d’utilisateur</label>
+            <label>Nom d&apos;utilisateur</label>
             <input
             value={username}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
